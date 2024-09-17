@@ -7,7 +7,7 @@ export class Viagem extends Document {
     nome: string;
 
     @Prop()
-    Datasaida: Date;
+    DataSaida: Date;
 
     @Prop()
     dataChegada: Date;
