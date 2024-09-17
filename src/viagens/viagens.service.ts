@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { CreateViagenDto } from './dto/create-viagen.dto';
 import { UpdateViagenDto } from './dto/update-viagen.dto';
+import { Viagem, ViagemDocument } from './entities/viagem.entity';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
 
 @Injectable()
 export class ViagensService {
+
+  constructor(@InjectModel(Viagem.name) private viagemModel: Model<ViagemDocument>) { }
+
+
   create(createViagenDto: CreateViagenDto) {
-    return 'This action adds a new viagen';
+    const viagem = new this.viagemModel(createViagenDto)
+    return viagem.save();
   }
 
   findAll() {
-    return `This action returns all viagens`;
+    return this.viagemModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} viagen`;
+  findOne(id: string) {
+    return this.viagemModel.findById;
   }
 
-  update(id: number, updateViagenDto: UpdateViagenDto) {
-    return `This action updates a #${id} viagen`;
+  update(id: string, updateViagenDto: UpdateViagenDto) {
+    return this.viagemModel.findByIdAndUpdate({
+      _id: id
+    }, {
+      updateViagenDto,
+    }, {
+      new: true
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} viagen`;
+  remove(id: string) {
+    return this.viagemModel
+      .deleteOne({
+        _id: id,
+      })
+      .exec();
   }
 }
